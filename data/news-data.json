@@ -1,0 +1,19 @@
+```json
+{
+  "today": [
+    {
+      "id": "example-1",
+      "title": "AI News Hub Updated",
+      "description": "Your daily AI news aggregator is now live!",
+      "source": "Your Site",
+      "url": "https://example.com",
+      "category": "announcement",
+      "priority": "high",
+      "date": "2026-06-27",
+      "tags": ["News"]
+    }
+  ],
+  "archive": [],
+  "lastUpdated": "2026-06-27T17:45:00.000Z"
+}
+```
