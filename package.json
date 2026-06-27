@@ -1,0 +1,49 @@
+{
+  "name": "ai-news-hub",
+  "version": "1.0.0",
+  "description": "Daily AI news aggregator with automated updates - captures the top 15 AI stories before 6 PM CET",
+  "main": "aggregator.js",
+  "scripts": {
+    "start": "node aggregator.js --schedule",
+    "update": "node aggregator.js --now",
+    "logs": "tail -f data/aggregator.log",
+    "dev": "NODE_ENV=development node aggregator.js --now",
+    "test": "node aggregator.js --now && echo 'Test run complete'",
+    "serve": "python3 -m http.server 8000 || http-server"
+  },
+  "keywords": [
+    "AI",
+    "news",
+    "aggregator",
+    "automated",
+    "daily",
+    "ChatGPT",
+    "Gemini",
+    "Claude",
+    "LLM",
+    "machine-learning"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ai-news-hub.git"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.11"
+  },
+  "devDependencies": {
+    "pm2": "^5.3.0"
+  },
+  "optionalDependencies": {
+    "rss-parser": "^3.13.0",
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "homepage": "https://github.com/yourusername/ai-news-hub",
+  "bugs": {
+    "url": "https://github.com/yourusername/ai-news-hub/issues"
+  }
+}

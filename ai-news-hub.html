@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News Hub - Daily AI Updates</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-alt: #06b6d4;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --critical: #ef4444;
+            --bg-subtle: #475569;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom: 2px solid var(--accent);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-accent {
+            color: var(--accent);
+        }
+
+        .update-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .tab-btn:hover {
+            color: var(--accent);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .news-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+        }
+
+        .news-tag {
+            display: inline-block;
+            width: fit-content;
+            padding: 0.4rem 0.8rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .news-tag.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--critical);
+        }
+
+        .news-tag.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .news-tag.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .news-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--bg-subtle);
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .news-source {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .news-source:hover {
+            color: var(--accent-alt);
+        }
+
+        .timestamp {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 0 3px var(--accent);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 16px;
+            width: 4px;
+            height: calc(100% + 1rem);
+            background: linear-gradient(180deg, var(--accent), transparent);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-table th {
+            background: rgba(59, 130, 246, 0.1);
+            border-bottom: 2px solid var(--border);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            background: var(--success);
+            color: var(--primary);
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge.down {
+            background: var(--critical);
+        }
+
+        .badge.neutral {
+            background: var(--bg-subtle);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-alt);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th, .comparison-table td {
+                padding: 0.75rem;
+            }
+        }
+
+        .highlight {
+            padding: 1.5rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .highlight strong {
+            color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-accent">⚡</span> AI News <span class="logo-accent">Hub</span>
+            </div>
+            <div class="update-info">
+                <span class="live-indicator"></span>
+                <span>Last updated: <strong id="last-update">Today at 5:45 PM CET</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Stay Ahead of AI</h1>
+            <p>Daily digest of breakthrough models, market shifts, and industry moves—curated by 6 PM CET</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">323+</div>
+                <div class="stat-label">Models Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Daily Updates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Top Stories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Source Networks</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="today">Today's Top 15</button>
+            <button class="tab-btn" data-tab="models">Model Rankings</button>
+            <button class="tab-btn" data-tab="market">Market Watch</button>
+            <button class="tab-btn" data-tab="timeline">This Week</button>
+        </div>
+
+        <!-- Today's Top Stories -->
+        <div class="content-section active" id="today">
+            <div class="news-grid">
+                <div class="news-card">
+                    <span class="news-tag success">Benchmark Breakthrough</span>
+                    <h3 class="news-title">Gemini 2.5 Pro Dominates Science Tasks</h3>
+                    <p class="news-description">Google's new reasoning mode hits 82.4% on GPQA Diamond, surpassing competitors. 94.1% on HumanEval+ resets the science leaderboard.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Google DeepMind</a>
+                        <span class="timestamp">June 22</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag warning">Market Shift</span>
+                    <h3 class="news-title">ChatGPT Falls Below 50% Market Share</h3>
+                    <p class="news-description">First time in AI history: ChatGPT at 46.4%, Gemini rises to 27.7%, Claude reaches 10.3%. Users actively compare assistants.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Sensor Tower</a>
+                        <span class="timestamp">Late May</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag">Platform War</span>
+                    <h3 class="news-title">Apple Picks Gemini Over ChatGPT</h3>
+                    <p class="news-description">iOS 27 integrates Gemini as default Siri assistant. Major distribution win for Google, setback for OpenAI's assistant strategy.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Apple</a>
+                        <span class="timestamp">June 25</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag critical">Talent Migration</span>
+                    <h3 class="news-title">Noam Shazeer Joins OpenAI from Google</h3>
+                    <p class="news-description">Transformer paper co-author leaves Google DeepMind for OpenAI as Lead for Architecture Research. Lasted 22 months at Google.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">OpenAI</a>
+                        <span class="timestamp">June 18</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag">Coming Soon</span>
+                    <h3 class="news-title">GPT-5.6 "Meaningful Improvement" Incoming</h3>
+                    <p class="news-description">OpenAI's Chief Scientist previews next major version with late-June 2026 launch expected to reclaim benchmark leadership.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">OpenAI</a>
+                        <span class="timestamp">June 22</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag success">Cost Innovation</span>
+                    <h3 class="news-title">GLM-5.2 Outperforms GPT-5.5 at 6.8x Lower Cost</h3>
+                    <p class="news-description">Chinese model reaches 62.1% on SWE-bench Pro. API costs $1.40 per million input tokens vs GPT-5.5's $30.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Zhipu AI</a>
+                        <span class="timestamp">June 22</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Rankings -->
+        <div class="content-section" id="models">
+            <h2 style="margin-bottom: 1.5rem;">Latest Model Performance</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Organization</th>
+                        <th>GPQA (Science)</th>
+                        <th>SWE-bench (Code)</th>
+                        <th>Input Cost /M</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Gemini 2.5 Pro Deep Think</strong></td>
+                        <td>Google</td>
+                        <td>82.4% ⭐</td>
+                        <td>—</td>
+                        <td>$2.50</td>
+                        <td><span class="badge">Live</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fable 5</strong></td>
+                        <td>OpenAI</td>
+                        <td>79.1%</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td><span class="badge">Live</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>GLM-5.2</strong></td>
+                        <td>Zhipu AI</td>
+                        <td>—</td>
+                        <td>62.1% 🏆</td>
+                        <td>$1.40</td>
+                        <td><span class="badge success">Best Value</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>GPT-5.5-Cyber</strong></td>
+                        <td>OpenAI</td>
+                        <td>76.3%</td>
+                        <td>58.6%</td>
+                        <td>$30</td>
+                        <td><span class="badge neutral">Awaiting 5.6</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude Opus 4.8</strong></td>
+                        <td>Anthropic</td>
+                        <td>—</td>
+                        <td>75.1%</td>
+                        <td>$3</td>
+                        <td><span class="badge">Live</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gemini 3.5 Standard</strong></td>
+                        <td>Google</td>
+                        <td>78%</td>
+                        <td>71%</td>
+                        <td>$0.075</td>
+                        <td><span class="badge success">Most Affordable</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Market Watch -->
+        <div class="content-section" id="market">
+            <h2 style="margin-bottom: 1.5rem;">Market Dynamics & Industry Moves</h2>
+            
+            <div class="highlight">
+                <strong>⚠️ Regulatory Watch:</strong> EU AI Act enforcement deadline for high-risk systems is August 2, 2026 (approx. 5 weeks away). US Executive Order signed June 2 focuses on AI cybersecurity and innovation support.
+            </div>
+
+            <div class="news-grid">
+                <div class="news-card">
+                    <span class="news-tag">Market Intelligence</span>
+                    <h3 class="news-title">Claude's Conversion Rate Leads Industry</h3>
+                    <p class="news-description">13% of Claude users upgrade to paid plans—highest conversion in the industry. Indicates strong product-market fit despite smaller user base.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Sensor Tower Report</a>
+                        <span class="timestamp">Late May</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag">Infrastructure</span>
+                    <h3 class="news-title">China Announces $295B AI Investment Plan</h3>
+                    <p class="news-description">5-year government strategy allocates ~$59B annually for AI infrastructure. Geopolitical dimension intensifies amid Fable 5 export ban.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">China Government</a>
+                        <span class="timestamp">June 22</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag">Hardware</span>
+                    <h3 class="news-title">Qualcomm Acquiring Tenstorrent for $8-10B</h3>
+                    <p class="news-description">Major move to compete with Nvidia in AI chip market. Tenstorrent uses open RISC-V standard, features chip veteran Jim Keller.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Qualcomm</a>
+                        <span class="timestamp">Early June</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag">Advertising</span>
+                    <h3 class="news-title">OpenAI Expands Advertising Business</h3>
+                    <p class="news-description">ChatGPT now serves 900M+ weekly active users with ~20% of queries showing commercial intent. Advertising becomes core business strategy.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">OpenAI</a>
+                        <span class="timestamp">June 26</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag">Consumer AI</span>
+                    <h3 class="news-title">Apple Embeds AI Throughout iOS 27</h3>
+                    <p class="news-description">Bill-splitting, password management, message suggestions, calendar creation from text. Focus on invisible, task-oriented AI over conversational.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">Apple</a>
+                        <span class="timestamp">June 26</span>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <span class="news-tag critical">Layoffs</span>
+                    <h3 class="news-title">Tech Layoffs Reach 142,000 in 2026</h3>
+                    <p class="news-description">Profitable companies cutting headcount to fund AI infrastructure investments. Structural shift in talent allocation towards AI-focused roles.</p>
+                    <div class="news-meta">
+                        <a href="https://www.buildfastwithai.com" class="news-source">AI Weekly</a>
+                        <span class="timestamp">June 25</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="content-section" id="timeline">
+            <h2 style="margin-bottom: 2rem;">This Week in AI</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">June 22, 2026</div>
+                        <div class="timeline-title">Gemini 2.5 Pro Deep Think Launches</div>
+                        <div class="timeline-desc">New reasoning mode achieves 82.4% on GPQA Diamond, 94.1% on HumanEval+. Estimated pricing $2.50/M input tokens in standard mode, 4x for Deep Think.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">June 22, 2026</div>
+                        <div class="timeline-title">OpenAI Previews GPT-5.6</div>
+                        <div class="timeline-desc">Chief Scientist announces "meaningful improvement" over GPT-5.5 with late-June launch. Expected to reclaim benchmark leadership over GLM-5.2.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">June 25, 2026</div>
+                        <div class="timeline-title">Apple Announces iOS 27 AI Integration</div>
+                        <div class="timeline-desc">Gemini becomes default Siri assistant. Apple embeds practical AI features (bill splitting, password updates, message suggestions) across all apps.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">June 26, 2026</div>
+                        <div class="timeline-title">OpenAI Announces Advertising Expansion</div>
+                        <div class="timeline-desc">ChatGPT reaches 900M+ weekly active users. ~20% of queries show commercial intent. Advertising becomes core business strategy.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Today, June 27, 2026</div>
+                        <div class="timeline-title">Daily Digest Complete</div>
+                        <div class="timeline-desc">All major developments from the past week aggregated and analyzed. Market consolidation, regulatory pressure, and continuous model innovation define the week.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🔍 Tracking 323+ models across 50+ organizations | Updated daily before 6 PM CET</p>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--bg-subtle);">Sources: OpenAI, Google DeepMind, Anthropic, Zhipu AI, TechCrunch, ScienceDaily, Sensor Tower, Build Fast with AI</p>
+        <div class="footer-links">
+            <a href="https://llm-stats.com">Model Rankings</a>
+            <a href="https://techcrunch.com/category/artificial-intelligence/">TechCrunch AI</a>
+            <a href="https://openai.com/news/">OpenAI News</a>
+            <a href="https://blog.google/innovation-and-ai/">Google AI Blog</a>
+            <a href="https://www.anthropic.com">Anthropic</a>
+        </div>
+        <p style="margin-top: 1rem;">Made with 🤖 • Last refresh: June 27, 2026 5:47 PM CET</p>
+    </footer>
+
+    <script>
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.content-section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Update timestamp to current time
+        function updateTimestamp() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Amsterdam'
+            };
+            document.getElementById('last-update').textContent = now.toLocaleDateString('en-US', options) + ' CET';
+        }
+
+        updateTimestamp();
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const dot = document.querySelector('.live-indicator');
+            dot.style.opacity = dot.style.opacity === '0.5' ? '1' : '0.5';
+        }, 1000);
+    </script>
+</body>
+</html>
